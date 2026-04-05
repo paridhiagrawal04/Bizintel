@@ -1,0 +1,364 @@
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+   WHY: CSS variables in one place means we change
+   the entire colour theme by editing 6 lines.
+═══════════════════════════════════════════════════ */
+:root {
+    --bg:          #0d0f14;
+    --surface:     #14171f;
+    --surface2:    #1c2030;
+    --border:      #272c3d;
+    --accent:      #e8ff47;        /* electric lime — the one thing you remember */
+    --accent-dim:  rgba(232,255,71,0.12);
+    --danger:      #ff5c5c;
+    --danger-dim:  rgba(255,92,92,0.12);
+    --text:        #f0f2f8;
+    --text-muted:  #6b7280;
+    --font-display: 'Syne', sans-serif;
+    --font-body:    'DM Sans', sans-serif;
+    --radius:       14px;
+    --radius-sm:    8px;
+    --shadow:       0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* ═══════════════════════════════════════════════════ RESET */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════ */
+.site-header {
+    text-align: center;
+    padding: 56px 24px 32px;
+}
+
+.logo {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: var(--text);
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.tagline {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════════════════════════════
+   LAYOUT WRAPPER
+═══════════════════════════════════════════════════ */
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+}
+
+/* ═══════════════════════════════════════════════════
+   UPLOAD SECTION
+═══════════════════════════════════════════════════ */
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.upload-card {
+    width: 100%;
+    max-width: 540px;
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 52px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-card:hover,
+.upload-card.drag-over {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.upload-icon svg {
+    width: 44px;
+    height: 44px;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.upload-label {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.upload-sub {
+    color: var(--text-muted);
+    margin: 6px 0;
+    font-size: 0.85rem;
+}
+
+.btn-browse {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 10px 24px;
+    background: var(--accent);
+    color: #0d0f14;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.btn-browse:hover { opacity: 0.85; }
+
+.upload-hint {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* Selected file row */
+.selected-file {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
+    max-width: 540px;
+    width: 100%;
+}
+
+.file-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-analyze {
+    background: var(--accent);
+    color: #0d0f14;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 10px 22px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+}
+
+.btn-analyze:hover { opacity: 0.85; }
+.btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ═══════════════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════════════ */
+.loader-wrap {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--text-muted);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════
+   ERROR BANNER
+═══════════════════════════════════════════════════ */
+.error-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--danger-dim);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    margin-top: 24px;
+    color: var(--danger);
+    font-size: 0.9rem;
+}
+
+.error-banner button {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   INSIGHTS STRIP
+   WHY: Scrollable horizontal ticker of NL insights
+   is more engaging than a plain bulleted list.
+═══════════════════════════════════════════════════ */
+.insights-strip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 0 12px;
+    scrollbar-width: none;
+    margin-top: 40px;
+}
+
+.insights-strip::-webkit-scrollbar { display: none; }
+
+.insight-pill {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    color: var(--text);
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════
+   METRIC CARDS
+═══════════════════════════════════════════════════ */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    transition: border-color 0.2s;
+}
+
+.metric-card:hover { border-color: var(--accent); }
+
+.metric-card.accent {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.metric-card.dim {
+    border-color: var(--danger);
+    background: var(--danger-dim);
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+/* ═══════════════════════════════════════════════════
+   CHARTS
+═══════════════════════════════════════════════════ */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+@media (max-width: 640px) {
+    .charts-grid { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+
+.chart-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.chart-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+.chart-wrap {
+    position: relative;
+    height: 240px;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET BUTTON
+═══════════════════════════════════════════════════ */
+.reset-wrap {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-reset {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    padding: 10px 24px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-reset:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}

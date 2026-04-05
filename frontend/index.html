@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BizIntel — Business Intelligence</title>
+
+    <!-- Chart.js from CDN — our charting library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════
+         HEADER
+    ═══════════════════════════════════════════ -->
+    <header class="site-header">
+        <div class="logo">Biz<span>Intel</span></div>
+        <p class="tagline">Drop your sales data. Get instant intelligence.</p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════
+         UPLOAD SECTION
+         WHY: A clearly labelled drag-target with a
+         visible file input. No hidden inputs — the
+         user always knows what's happening.
+    ═══════════════════════════════════════════ -->
+    <main>
+        <section class="upload-section">
+            <div class="upload-card" id="dropZone">
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 16V4m0 0L8 8m4-4l4 4"/>
+                        <path d="M3 16v2a3 3 0 003 3h12a3 3 0 003-3v-2"/>
+                    </svg>
+                </div>
+                <p class="upload-label">Drag & drop your file here</p>
+                <p class="upload-sub">or</p>
+                <label class="btn-browse" for="fileInput">Browse File</label>
+                <!-- 
+                    WHY "accept": Restricts the file picker to valid types.
+                    The server also validates — this is just UX convenience.
+                -->
+                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" hidden />
+                <p class="upload-hint">Supports .xlsx, .xls, .csv</p>
+            </div>
+
+            <!-- File name + Analyze button appear after selection -->
+            <div class="selected-file" id="selectedFile" style="display:none;">
+                <span class="file-name" id="fileName"></span>
+                <button class="btn-analyze" id="analyzeBtn">Analyze →</button>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════
+             LOADING STATE
+             WHY: The Python analysis takes ~1-2s.
+             Without a loader the user thinks it's broken.
+        ═══════════════════════════════════════════ -->
+        <div class="loader-wrap" id="loader" style="display:none;">
+            <div class="spinner"></div>
+            <p>Analyzing your data…</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             ERROR BANNER
+        ═══════════════════════════════════════════ -->
+        <div class="error-banner" id="errorBanner" style="display:none;">
+            <span id="errorMessage"></span>
+            <button onclick="resetUI()">✕</button>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+             RESULTS — hidden until analysis completes
+        ═══════════════════════════════════════════ -->
+        <section class="results" id="results" style="display:none;">
+
+            <!-- ── Natural Language Insights ── -->
+            <div class="insights-strip" id="insightsStrip"></div>
+
+            <!-- ── Key Metric Cards ── -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <p class="metric-label">Total Sales</p>
+                    <p class="metric-value" id="totalSales">—</p>
+                </div>
+                <div class="metric-card">
+                    <p class="metric-label">Avg. Order Value</p>
+                    <p class="metric-value" id="avgSales">—</p>
+                </div>
+                <div class="metric-card">
+                    <p class="metric-label">Total Orders</p>
+                    <p class="metric-value" id="totalOrders">—</p>
+                </div>
+                <div class="metric-card accent">
+                    <p class="metric-label">Top Product</p>
+                    <p class="metric-value" id="topProduct">—</p>
+                </div>
+                <div class="metric-card dim">
+                    <p class="metric-label">Lowest Product</p>
+                    <p class="metric-value" id="lowestProduct">—</p>
+                </div>
+                <div class="metric-card">
+                    <p class="metric-label">Peak Period</p>
+                    <p class="metric-value" id="peakPeriod">—</p>
+                </div>
+            </div>
+
+            <!-- ── Charts ── -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2 class="chart-title">Sales Over Time</h2>
+                    <p class="chart-sub" id="periodLabel"></p>
+                    <!-- 
+                        WHY wrap in a div: Chart.js needs the parent
+                        to have a defined size. The wrapper controls
+                        height; the canvas fills it responsively.
+                    -->
+                    <div class="chart-wrap">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2 class="chart-title">Sales by Product</h2>
+                    <div class="chart-wrap">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Reset button ── -->
+            <div class="reset-wrap">
+                <button class="btn-reset" onclick="resetUI()">← Analyze Another File</button>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
